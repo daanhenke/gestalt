@@ -1,0 +1,10 @@
+services:
+  nats:
+    image: nats:latest
+    ports:
+      - '4222:4222'
+      - '8222:8222'
+#  postgres:
+#    image: postgres:latest
+#  minio:
+#    image: minio/minio:latest

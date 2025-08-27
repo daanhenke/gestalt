@@ -1,0 +1,4 @@
+coqui-tts
+playsound
+nats-py
+asyncio

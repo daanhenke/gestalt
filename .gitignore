@@ -1,0 +1,6 @@
+.idea/
+__pycache__/
+node_modules/
+data/voice-clips/persona5/
+data/*.wav
+data/*.mp3

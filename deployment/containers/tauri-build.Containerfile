@@ -15,7 +15,6 @@ RUN apt-get update && apt-get install -y \
     libwebkit2gtk-4.1-dev \
     libappindicator3-dev \
     librsvg2-dev \
-    libayatana-appindicator3-dev \
     # Additional system libraries
     libssl-dev \
     libgtk-3-dev \

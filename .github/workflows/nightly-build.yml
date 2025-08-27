@@ -11,13 +11,14 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  IMAGE_NAME: ghcr.io/${{ github.repository }}/tauri-builder:latest
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/tauri-builder
 
 jobs:
   build-linux:
     runs-on: ubuntu-latest
     container:
-      image: ${{ env.IMAGE_NAME }}
+      image: ghcr.io/${{ github.repository }}/tauri-builder:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -66,7 +67,7 @@ jobs:
   build-windows:
     runs-on: ubuntu-latest
     container:
-      image: g${{ env.IMAGE_NAME }}
+      image: ghcr.io/${{ github.repository }}/tauri-builder:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -115,7 +116,7 @@ jobs:
   build-android:
     runs-on: ubuntu-latest
     container:
-      image: ${{ env.IMAGE_NAME }}
+      image: ghcr.io/${{ github.repository }}/tauri-builder:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

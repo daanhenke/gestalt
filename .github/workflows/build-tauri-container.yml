@@ -5,11 +5,8 @@ on:
     branches: [ master ]
     paths:
       - 'deployment/containers/tauri-build.Containerfile'
-      - '.github/workflows/build-container.yml'
+      - '.github/workflows/build-tauri-container.yml'
   workflow_dispatch:
-  schedule:
-    # Rebuild weekly to get security updates
-    - cron: '0 6 * * 0'
 
 env:
   REGISTRY: ghcr.io

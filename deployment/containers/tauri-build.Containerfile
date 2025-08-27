@@ -38,6 +38,7 @@ ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 # Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
+RUN rustup default stable
 
 # Add Rust targets for cross-compilation
 RUN rustup target add x86_64-pc-windows-gnu

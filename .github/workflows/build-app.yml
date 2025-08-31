@@ -83,13 +83,14 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Setup Android SDK + NDK
+      - name: Setup Android SDK
         if: matrix.kind == 'android'
         uses: android-actions/setup-android@v3
         with:
           packages: platforms;android-36 platform-tools build-tools;35.0.0
 
       - name: Install NDK
+        if: matrix.kind == 'android'
         run: sdkmanager "ndk;26.3.11579264"
 
       - name: Add Rust Android targets
@@ -133,9 +134,10 @@ jobs:
       - name: Tauri build (android)
         if: matrix.kind == 'android'
         env:
-          ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+          NDK_HOME: ${{ env.ANDROID_SDK_ROOT }}/ndk-bundle
         run: |
           # Produces APK/AAB under src-tauri/gen/android/app/build/outputs/*
+          ls ${{ env.ANDROID_SDK_ROOT }}/ndk-bundle
           pnpm tauri android init
           pnpm tauri android build
 

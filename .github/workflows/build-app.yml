@@ -152,7 +152,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tauri-bundles-${{ matrix.name }}
-          path: src-tauri/target/release/bundle/**
+          path: |
+            frontend/src-tauri/target/release/bundle/**
+            frontend/src-tauri/target/**/release/bundle/**
           if-no-files-found: error
 
       - name: Upload bundles (android)
@@ -161,8 +163,8 @@ jobs:
         with:
           name: tauri-bundles-${{ matrix.name }}
           path: |
-            src-tauri/gen/android/**/outputs/apk/**/*.apk
-            src-tauri/gen/android/**/outputs/bundle/**/*.aab
+            frontend/src-tauri/gen/android/**/outputs/apk/**/*.apk
+            frontend/src-tauri/gen/android/**/outputs/bundle/**/*.aab
           if-no-files-found: error
 
       - name: Upload bundles (ios)
@@ -171,7 +173,7 @@ jobs:
         with:
           name: tauri-bundles-${{ matrix.name }}
           path: |
-            src-tauri/gen/ios/**/*.ipa
-            src-tauri/gen/ios/**/*.app
-            src-tauri/gen/ios/**/*.xcarchive
+            frontend/src-tauri/gen/ios/**/*.ipa
+            frontend/src-tauri/gen/ios/**/*.app
+            frontend/src-tauri/gen/ios/**/*.xcarchive
           if-no-files-found: warn

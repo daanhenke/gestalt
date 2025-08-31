@@ -23,9 +23,9 @@ jobs:
         include:
           # ---- Desktop ----
           - { name: linux,   os: ubuntu-24.04, kind: desktop }
-#          - { name: macOS (arm64), os: macos-14, kind: desktop }
-#          - { name: macOS (intel), os: macos-13, kind: desktop }
-#          - { name: windows, os: windows-latest, kind: desktop }
+          - { name: macOS (arm64), os: macos-14, kind: desktop }
+          - { name: macOS (intel), os: macos-13, kind: desktop }
+          - { name: windows, os: windows-latest, kind: desktop }
 #          # ---- Mobile ----
 #          - { name: android, os: ubuntu-24.04, kind: android }
 #          - { name: ios,     os: macos-14,     kind: ios }
@@ -125,10 +125,6 @@ jobs:
           pnpm fetch
           pnpm install --frozen-lockfile
 
-      # If your tauri.conf.json doesn’t run Vite automatically, uncomment:
-      # - name: Build Vite
-      #   run: pnpm build
-
       # ---------- Build (desktop) ----------
       - name: Tauri build (desktop)
         if: matrix.kind == 'desktop'
@@ -156,7 +152,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tauri-bundles-${{ matrix.name }}
-          path: src-tauri/target/**/release/bundle/**
+          path: src-tauri/target/release/bundle/**
           if-no-files-found: error
 
       - name: Upload bundles (android)

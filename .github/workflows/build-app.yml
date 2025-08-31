@@ -132,7 +132,7 @@ jobs:
       # ---------- Build (desktop) ----------
       - name: Tauri build (desktop)
         if: matrix.kind == 'desktop'
-        run: pnpm dlx @tauri-apps/cli tauri build
+        run: pnpm tauri build
 
       # ---------- Build (Android) ----------
       - name: Tauri build (android)
@@ -141,14 +141,14 @@ jobs:
           ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
         run: |
           # Produces APK/AAB under src-tauri/gen/android/app/build/outputs/*
-          pnpm dlx @tauri-apps/cli tauri android build
+          pnpm tauri android build
 
       # ---------- Build (iOS) ----------
       - name: Tauri build (iOS)
         if: matrix.kind == 'ios'
         run: |
           # Builds Xcode project and compiles. Without signing, you’ll get .app/.xcarchive artifacts.
-          pnpm dlx @tauri-apps/cli tauri ios build
+          pnpm tauri ios build
 
       # ---------- Artifacts ----------
       - name: Upload bundles (desktop)

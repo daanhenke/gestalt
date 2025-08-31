@@ -1,2 +1,4 @@
-﻿onlyBuiltDependencies:
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@openapitools/openapi-generator-cli'
   - esbuild

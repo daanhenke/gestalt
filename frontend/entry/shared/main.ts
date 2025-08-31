@@ -1,8 +1,8 @@
 ﻿import 'virtual:uno.css'
 import '@entry/shared/core.css'
 import {createApp, type App} from "vue";
-import Application from "@app/app/Application.vue";
-import { createRouter } from "@app/app/pages/routes";
+import Application from "@app/main/Application.vue";
+import { createRouter } from "@app/main/pages/routes";
 
 export function CoreMain(app: App<Element>): void
 {

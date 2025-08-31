@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-api-client": "openapi-generator-cli generate -c openapi.config.yml"
   },
   "dependencies": {
     "pinia": "^3.0.3",
@@ -15,6 +16,7 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.23.1",
     "@tauri-apps/cli": "^2.8.3",
     "@types/node": "^24.3.0",
     "@vitejs/plugin-vue": "^6.0.1",

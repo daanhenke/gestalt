@@ -1,0 +1,7 @@
+﻿package.json
+tsconfig.json
+.gitignore
+README.md
+git_push.sh
+npm-shrinkwrap.json
+docs/

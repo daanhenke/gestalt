@@ -1,0 +1,11 @@
+﻿generatorName: typescript-axios
+inputSpec: http://localhost:5000/swagger/v1/swagger.json
+outputDir: ./api
+additionalProperties:
+  useSingleRequestParameter: true      # ergonomic method signatures
+  withSeparateModelsAndApi: true       # split into apis/ and models/
+  supportsES6: true
+  useUnionTypes: true
+  apiPackage: 'clients'
+  modelPackage: 'models'
+globalProperty:

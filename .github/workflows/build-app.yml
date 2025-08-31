@@ -87,7 +87,10 @@ jobs:
         if: matrix.kind == 'android'
         uses: android-actions/setup-android@v3
         with:
-          packages: platforms;android-36 platform-tools build-tools;35.0.0 ndk;26.3.11579264
+          packages: platforms;android-36 platform-tools build-tools;35.0.0
+
+      - name: Install NDK
+        run: sdkmanager "ndk;26.3.11579264"
 
       - name: Add Rust Android targets
         if: matrix.kind == 'android'

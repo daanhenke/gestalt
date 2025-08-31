@@ -1,0 +1,176 @@
+﻿name: build-app
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: build-app-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # ---- Desktop ----
+          - { name: linux,   os: ubuntu-24.04, kind: desktop }
+          - { name: macOS (arm64), os: macos-14, kind: desktop }
+          - { name: macOS (intel), os: macos-13, kind: desktop }
+          - { name: windows, os: windows-latest, kind: desktop }
+          # ---- Mobile ----
+          - { name: android, os: ubuntu-24.04, kind: android }
+          - { name: ios,     os: macos-14,     kind: ios }
+
+    env:
+      TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+      TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ---------- Common toolchains ----------
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Rust (stable)
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      # ---------- Rust cache (cargo + target) ----------
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: ./src-tauri
+          cache-on-failure: true
+
+      # ---------- Linux deps for desktop ----------
+      - name: Install Tauri Linux dependencies
+        if: matrix.kind == 'desktop' && startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-dev \
+            libwebkit2gtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev
+
+      # ---------- Android setup ----------
+      - name: Setup Java (JDK 17 for Android)
+        if: matrix.kind == 'android'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Android SDK + NDK
+        if: matrix.kind == 'android'
+        uses: android-actions/setup-android@v3
+        with:
+          packages: |
+            platforms;android-35
+            platform-tools
+            build-tools;35.0.0
+            ndk;26.3.11579264
+
+      - name: Add Rust Android targets
+        if: matrix.kind == 'android'
+        run: |
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+
+      - name: Gradle cache
+        if: matrix.kind == 'android'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      # ---------- iOS setup ----------
+      - name: Add Rust iOS targets
+        if: matrix.kind == 'ios'
+        run: |
+          rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
+
+      # CocoaPods is usually not needed for plain Tauri, but enable if your app uses pods:
+      # - name: Setup CocoaPods
+      #   if: matrix.kind == 'ios'
+      #   run: sudo gem install cocoapods
+
+      # ---------- JS deps ----------
+      - name: pnpm install (cached)
+        run: |
+          pnpm fetch
+          pnpm install --frozen-lockfile
+
+      # If your tauri.conf.json doesn’t run Vite automatically, uncomment:
+      # - name: Build Vite
+      #   run: pnpm build
+
+      # ---------- Build (desktop) ----------
+      - name: Tauri build (desktop)
+        if: matrix.kind == 'desktop'
+        run: pnpm dlx @tauri-apps/cli tauri build
+
+      # ---------- Build (Android) ----------
+      - name: Tauri build (android)
+        if: matrix.kind == 'android'
+        env:
+          ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+        run: |
+          # Produces APK/AAB under src-tauri/gen/android/app/build/outputs/*
+          pnpm dlx @tauri-apps/cli tauri android build
+
+      # ---------- Build (iOS) ----------
+      - name: Tauri build (iOS)
+        if: matrix.kind == 'ios'
+        run: |
+          # Builds Xcode project and compiles. Without signing, you’ll get .app/.xcarchive artifacts.
+          pnpm dlx @tauri-apps/cli tauri ios build
+
+      # ---------- Artifacts ----------
+      - name: Upload bundles (desktop)
+        if: matrix.kind == 'desktop'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-bundles-${{ matrix.name }}
+          path: src-tauri/target/**/release/bundle/**
+          if-no-files-found: error
+
+      - name: Upload bundles (android)
+        if: matrix.kind == 'android'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-bundles-${{ matrix.name }}
+          path: |
+            src-tauri/gen/android/**/outputs/apk/**/*.apk
+            src-tauri/gen/android/**/outputs/bundle/**/*.aab
+          if-no-files-found: error
+
+      - name: Upload bundles (ios)
+        if: matrix.kind == 'ios'
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-bundles-${{ matrix.name }}
+          path: |
+            src-tauri/gen/ios/**/*.ipa
+            src-tauri/gen/ios/**/*.app
+            src-tauri/gen/ios/**/*.xcarchive
+          if-no-files-found: warn

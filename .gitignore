@@ -1,0 +1,7 @@
+﻿node_modules/
+bin/
+obj/
+
+.idea/
+
+src-tauri/target/

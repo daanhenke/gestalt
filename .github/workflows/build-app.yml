@@ -23,12 +23,12 @@ jobs:
         include:
           # ---- Desktop ----
           - { name: linux,   os: ubuntu-24.04, kind: desktop }
-          - { name: macOS (arm64), os: macos-14, kind: desktop }
+          - { name: macOS (arm64), os: macos-15, kind: desktop }
           - { name: macOS (intel), os: macos-13, kind: desktop }
           - { name: windows, os: windows-latest, kind: desktop }
 #          # ---- Mobile ----
           - { name: android, os: ubuntu-24.04, kind: android }
-          - { name: ios,     os: macos-14,     kind: ios }
+          - { name: ios,     os: macos-15,     kind: ios }
 
     env:
       TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
@@ -87,11 +87,7 @@ jobs:
         if: matrix.kind == 'android'
         uses: android-actions/setup-android@v3
         with:
-          packages: |
-            platforms;android-35
-            platform-tools
-            build-tools;35.0.0
-            ndk;26.3.11579264
+          packages: platforms;android-36 platform-tools build-tools;35.0.0 ndk;26.3.11579264
 
       - name: Add Rust Android targets
         if: matrix.kind == 'android'

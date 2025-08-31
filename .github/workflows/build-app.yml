@@ -22,17 +22,18 @@ jobs:
       matrix:
         include:
           # ---- Desktop ----
-          - { name: linux,   os: ubuntu-24.04, kind: desktop }
-          - { name: macOS (arm64), os: macos-15, kind: desktop }
-          - { name: macOS (intel), os: macos-13, kind: desktop }
-          - { name: windows, os: windows-latest, kind: desktop }
+#          - { name: linux,   os: ubuntu-24.04, kind: desktop }
+#          - { name: macOS (arm64), os: macos-15, kind: desktop }
+#          - { name: macOS (intel), os: macos-13, kind: desktop }
+#          - { name: windows, os: windows-latest, kind: desktop }
 #          # ---- Mobile ----
           - { name: android, os: ubuntu-24.04, kind: android }
-          - { name: ios,     os: macos-15,     kind: ios }
+#          - { name: ios,     os: macos-15,     kind: ios }
 
     env:
       TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
       TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+      ANDROID_NDK_VERSION: "28.0.12674087"
 
     steps:
       - name: Checkout
@@ -83,14 +84,15 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Setup Android SDK + NDK
+      - name: Setup Android SDK
         if: matrix.kind == 'android'
         uses: android-actions/setup-android@v3
         with:
           packages: platforms;android-36 platform-tools build-tools;35.0.0
 
       - name: Install NDK
-        run: sdkmanager "ndk;26.3.11579264"
+        if: matrix.kind == 'android'
+        run: sdkmanager "ndk;${{ env.ANDROID_NDK_VERSION }}"
 
       - name: Add Rust Android targets
         if: matrix.kind == 'android'
@@ -133,7 +135,7 @@ jobs:
       - name: Tauri build (android)
         if: matrix.kind == 'android'
         env:
-          ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+          NDK_HOME: ${{ env.ANDROID_SDK_ROOT }}/ndk/${{ env.ANDROID_NDK_VERSION }}
         run: |
           # Produces APK/AAB under src-tauri/gen/android/app/build/outputs/*
           pnpm tauri android init

@@ -27,8 +27,8 @@ jobs:
           - { name: macOS (intel), os: macos-13, kind: desktop }
           - { name: windows, os: windows-latest, kind: desktop }
 #          # ---- Mobile ----
-#          - { name: android, os: ubuntu-24.04, kind: android }
-#          - { name: ios,     os: macos-14,     kind: ios }
+          - { name: android, os: ubuntu-24.04, kind: android }
+          - { name: ios,     os: macos-14,     kind: ios }
 
     env:
       TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
@@ -61,7 +61,7 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: ./src-tauri
+          workspaces: ./frontend/src-tauri
           cache-on-failure: true
 
       # ---------- Linux deps for desktop ----------
@@ -137,6 +137,7 @@ jobs:
           ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
         run: |
           # Produces APK/AAB under src-tauri/gen/android/app/build/outputs/*
+          pnpm tauri android init
           pnpm tauri android build
 
       # ---------- Build (iOS) ----------
@@ -144,6 +145,7 @@ jobs:
         if: matrix.kind == 'ios'
         run: |
           # Builds Xcode project and compiles. Without signing, you’ll get .app/.xcarchive artifacts.
+          pnpm tauri ios init
           pnpm tauri ios build
 
       # ---------- Artifacts ----------

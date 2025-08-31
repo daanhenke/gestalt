@@ -124,8 +124,6 @@ jobs:
         run: |
           pnpm fetch
           pnpm install --frozen-lockfile
-        env:
-          PNPM_APPROVE_BUILDS: true
 
       # If your tauri.conf.json doesn’t run Vite automatically, uncomment:
       # - name: Build Vite

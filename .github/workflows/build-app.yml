@@ -20,12 +20,12 @@ jobs:
         include:
           # ---- Desktop ----
           - { name: linux,   os: ubuntu-24.04, kind: desktop }
-          - { name: macOS (arm64), os: macos-14, kind: desktop }
-          - { name: macOS (intel), os: macos-13, kind: desktop }
-          - { name: windows, os: windows-latest, kind: desktop }
-          # ---- Mobile ----
-          - { name: android, os: ubuntu-24.04, kind: android }
-          - { name: ios,     os: macos-14,     kind: ios }
+#          - { name: macOS (arm64), os: macos-14, kind: desktop }
+#          - { name: macOS (intel), os: macos-13, kind: desktop }
+#          - { name: windows, os: windows-latest, kind: desktop }
+#          # ---- Mobile ----
+#          - { name: android, os: ubuntu-24.04, kind: android }
+#          - { name: ios,     os: macos-14,     kind: ios }
 
     env:
       TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
@@ -39,6 +39,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
+          version: 10
           run_install: false
 
       - name: Setup Node.js 24

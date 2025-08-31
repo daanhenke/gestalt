@@ -64,6 +64,7 @@ jobs:
         with:
           workspaces: ./frontend/src-tauri
           cache-on-failure: true
+          key: ${{ matrix.name }}
 
       # ---------- Linux deps for desktop ----------
       - name: Install Tauri Linux dependencies

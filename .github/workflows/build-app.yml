@@ -155,7 +155,7 @@ jobs:
         if: matrix.kind == 'desktop'
         uses: actions/upload-artifact@v4
         with:
-          name: tauri-bundles-${{ matrix.name }}
+          name: app-${{ matrix.name }}
           path: |
             frontend/src-tauri/target/release/bundle/**
             frontend/src-tauri/target/**/release/bundle/**
@@ -165,7 +165,7 @@ jobs:
         if: matrix.kind == 'android'
         uses: actions/upload-artifact@v4
         with:
-          name: tauri-bundles-${{ matrix.name }}
+          name: app-${{ matrix.name }}
           path: |
             frontend/src-tauri/gen/android/**/outputs/apk/**/*.apk
             frontend/src-tauri/gen/android/**/outputs/bundle/**/*.aab
@@ -175,7 +175,7 @@ jobs:
         if: matrix.kind == 'ios'
         uses: actions/upload-artifact@v4
         with:
-          name: tauri-bundles-${{ matrix.name }}
+          name: app-${{ matrix.name }}
           path: |
             frontend/src-tauri/gen/ios/**/*.ipa
             frontend/src-tauri/gen/ios/**/*.app

@@ -22,10 +22,10 @@ jobs:
       matrix:
         include:
           # ---- Desktop ----
-#          - { name: linux,   os: ubuntu-24.04, kind: desktop }
-#          - { name: macOS (arm64), os: macos-15, kind: desktop }
-#          - { name: macOS (intel), os: macos-13, kind: desktop }
-#          - { name: windows, os: windows-latest, kind: desktop }
+          - { name: linux,   os: ubuntu-24.04, kind: desktop }
+          - { name: macOS (arm64), os: macos-15, kind: desktop }
+          - { name: macOS (intel), os: macos-13, kind: desktop }
+          - { name: windows, os: windows-latest, kind: desktop }
 #          # ---- Mobile ----
           - { name: android, os: ubuntu-24.04, kind: android }
 #          - { name: ios,     os: macos-15,     kind: ios }

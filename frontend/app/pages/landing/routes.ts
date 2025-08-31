@@ -1,5 +1,7 @@
 ﻿import type {RouteRecordRaw} from "vue-router";
-import LandingLayout from "@app/app/pages/landing/LandingLayout.vue";
+
+import LandingLayout from "./LandingLayout.vue";
+import Login from "./steps/Login.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -7,7 +9,8 @@ const routes: RouteRecordRaw[] = [
     component: LandingLayout,
     children: [
       {
-        path: '/1'
+        path: '/1',
+        component: Login,
       }
     ]
   }
